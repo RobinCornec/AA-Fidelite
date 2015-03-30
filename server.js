@@ -8,6 +8,9 @@ var app = express();
 
 //app.use(express.bodyParser());
 app.use(session({secret: 'todotopsecret'}));
+app.use(bodyParser.urlencoded());
+app.use(bodyParser.json());
+
 
 app.get('/', function(req, res) { 
     res.render('index.ejs');
@@ -15,11 +18,11 @@ app.get('/', function(req, res) {
 
 
 app.post('/', function(req, res){
-	var titleart = req.body.article.titleart;
-	var contentart = req.body.article.contentart;
+	var id = req.body.identifiant;
+	var pwd = req.body.password;
 	//var dateValue = req.body.checkDate;
-
-	reqmysql.insertsql(titleart, contentart);
+	alert(id);
+	//reqmysql.insertsql(titleart, contentart);
 
 })
 
