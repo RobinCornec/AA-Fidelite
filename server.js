@@ -6,9 +6,10 @@ var reqmysql = require("./DAO/connection");
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var app = express();
 
-//app.use(express.bodyParser());
 app.use(session({secret: 'todotopsecret'}));
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(bodyParser.json());
 
 
@@ -20,10 +21,9 @@ app.get('/', function(req, res) {
 app.post('/', function(req, res){
 	var id = req.body.identifiant;
 	var pwd = req.body.password;
-	//var dateValue = req.body.checkDate;
-	alert(id);
-	//reqmysql.insertsql(titleart, contentart);
-
+	var nom = reqmysql.selectuser(id);
+	console.log(nom);
+	res.render('mainPage.ejs', {nom: nom});
 })
 
 .use(express.static(__dirname + '/')) ;
