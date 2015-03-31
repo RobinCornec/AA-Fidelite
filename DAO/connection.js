@@ -7,18 +7,15 @@ var connection = mysql.createConnection({
   database : 'airatlantique'
 });
 
-var selectuser = function (id, pwd, callback){  
+var selectuser = function (login, pwd, callback){  
 
-	query = connection.query('SELECT * FROM users WHERE Username = "' + id + '"', function res(err, rows, field) {	
+	query = connection.query('SELECT * FROM users WHERE Username = "' + login + '"', function res(err, rows, field) {	
 
     callback(rows[0]);
     
   });
   
 };
-
-
-
 
 
 exports.selectuser = selectuser;

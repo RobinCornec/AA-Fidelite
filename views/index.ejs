@@ -10,11 +10,11 @@
             <form method="post" action="/connect">
                 <fieldset>
                     <legend>Connexion</legend>
-                    <p>
-                        <%= msg %> </br>
+                    <p>                       
                         Identifiant :<input name="identifiant" type="text" id="identifiant" /><br />
-                        Mot de Passe :<input type="password" name="password" id="password" />
+                        Mot de Passe :<input type="password" name="password" id="password" />                      
                     </p>
+                    <font color="red"> <%= msg %> </font>
                 </fieldset>
                 <p>
                     <input type="submit" value="connexion" />
