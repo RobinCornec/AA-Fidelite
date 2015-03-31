@@ -14,16 +14,37 @@ app.use(bodyParser.json());
 
 
 app.get('/', function(req, res) { 
-    res.render('index.ejs');
+	msg="";
+    res.render('index.ejs', {msg: msg});
 });
 
 
-app.post('/', function(req, res){
+app.post('/connect', function(req, res){
 	var id = req.body.identifiant;
 	var pwd = req.body.password;
-	var nom = reqmysql.selectuser(id);
-	console.log(nom);
-	res.render('mainPage.ejs', {nom: nom});
+	reqmysql.selectuser(id, pwd, function callback (result){
+			
+		try{
+
+			if (id == result.Username && pwd == result.Password) {
+		        console.log(result.Nom);
+				console.log(result.Prenom);
+				res.render('mainPage.ejs', {nom: result.Nom, prenom: result.Prenom});
+    		}
+		 	else{
+	    		msg = "Mot de passe incorrect";
+	    		res.render('index.ejs', {msg: msg});
+    		};
+
+		 }catch(msg){
+		 	var msg = "Cette Username n'existe pas";
+			res.render('index.ejs', {msg: msg});
+		 	console.log(msg);
+		 } 
+
+		
+	});
+	
 })
 
 .use(express.static(__dirname + '/')) ;
