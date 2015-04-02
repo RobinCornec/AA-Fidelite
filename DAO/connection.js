@@ -22,9 +22,9 @@ var selecttemps = function (idVol, callback){
   
 };
 
-var insertvol = function (iduser, idvol, date, callback){  
+var insertvol = function (iduser, idvol, callback){  
 
-	query = connection.query('INSERT INTO volpassagers (idVol, dateVol, idUser) VALUES (' + idvol + ', "' + date + '", ' + iduser + ');',
+	query = connection.query('INSERT INTO volpassagers (idVol, idUser) VALUES (' + idvol + ', ' + iduser + ');',
 	 function res(err) {	
     	if (!err) {
     		var msg = "insert vol is done !";
@@ -35,6 +35,21 @@ var insertvol = function (iduser, idvol, date, callback){
     	};
   });
   
+};
+
+var insertuser = function (login, pwd, name, lastname, admin, callback){  
+
+  query = connection.query('INSERT INTO users (Nom, Prenom, Username, Password, admin) VALUES ("' + 
+    lastname + '", "' + name + '", "' + login + '", "' + pwd + '", "' + admin + '");',
+   function res(err) {  
+      if (!err) {
+        var msg = "insert user " + name + " " + lastname + " is done !";
+        callback(msg);
+      }
+      else{
+        callback(err);
+      };
+  });
 };
 
 var updatetPointF = function (iduser, pf, callback){  
@@ -49,13 +64,10 @@ var updatetPointF = function (iduser, pf, callback){
     		callback(err);
     	};
   });
-  
 };
-
-
-
 
 exports.selectuser = selectuser;
 exports.selecttemps = selecttemps;
 exports.insertvol = insertvol;
+exports.insertuser = insertuser;
 exports.updatetPointF = updatetPointF;

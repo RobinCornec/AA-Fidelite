@@ -15,7 +15,6 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-
 app.get('/', function(req, res) { 
 	sess=req.session;
     res.render('index.ejs', {msg: msg});
@@ -26,12 +25,17 @@ app.get('/connect', function(req, res) {
 	if (sess.nom) {
 		reqmysql.selectuser(sess.login, function callback (result){	
 			sess.pf = result.pointFidelite;
-			res.render('mainPage.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf});    		
+			if (sess.admin == 1) {
+				res.redirect('/admin');
+	        }
+    		else{
+    			res.redirect('/mainPage');   			 
+    		}; 		               			   		
 		});
 	}
 	else{
 		msg = "Veuillez vous connecter";
-		res.render('index.ejs', {msg: msg});
+		res.redirect('back');
 		console.log(msg);
 	};
     
@@ -47,29 +51,57 @@ app.post('/connect', function(req, res){
 				sess.nom = result.Nom;
 				sess.prenom = result.Prenom;
 				sess.pf = result.pointFidelite;
-				if (sess.login == result.Username && md5(pwd) == result.Password) {
+				sess.admin = result.admin;
+				if (md5(pwd) == result.Password) {
 			        console.log(result.Prenom + " " + result.Nom + " s'est connecté");
-					res.render('mainPage.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf});
+			        console.log(sess.admin);
+			        if (sess.admin == 1) {
+						res.redirect('/admin');
+			        }
+		    		else{
+		    			res.redirect('/mainPage');   			 
+		    		};       		
 	    		}
 			 	else{
 		    		msg = "Mot de passe incorrect";
-		    		res.render('index.ejs', {msg: msg});
+					res.redirect('back');
 		    		console.log(msg);
 	    		};
 
 			 }catch(msg){
-			 	msg = "Cette Username n'existe pas";
-				res.render('index.ejs', {msg: msg});
-			 	console.log(msg);
+			 	msg = "Username incorrect";
+				res.redirect('back');
+	    		console.log(msg);
 			 } 	
 		});
 	}
-	else if (req.body.idPassager) {
+	else{
+		msg = "Veuillez vous connecté";
+		res.redirect('back');
+		console.log(msg);
+	};
+
+});
+app.get('/mainPage', function(req, res){
+	sess=req.session;
+	res.render('mainPage.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf});
+})
+
+app.get('/admin', function(req, res){
+	sess=req.session;
+	res.render('mainPageAdmin.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf});  
+
+});
+
+app.post('/admin', function(req, res){
+	sess=req.session;
+
+	if (req.body.idPassager) {
 		var idPassager = req.body.idPassager;
 		var idVol = req.body.idVol;
 		var date = req.body.date;
 		var pfnew;
-		reqmysql.insertvol(idPassager, idVol, date, function callback (result){
+		reqmysql.insertvol(idPassager, idVol, function callback (result){
 			console.log(result);
 		});
 		reqmysql.selecttemps(idVol, function callback (result){
@@ -78,19 +110,23 @@ app.post('/connect', function(req, res){
 			console.log(sess.prenom + " " + sess.nom + " a maintenant " + sess.pf + " points de fidélité");
 			reqmysql.updatetPointF(idPassager, pfnew, function callback (result){
 				console.log(result);
-				res.render('mainPage.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf});   			
+				res.render('mainPageAdmin.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf});       
 			});
-		});
-		
+		});	
 	}
-	else{
-		msg = "Veuillez vous connecté";
-		res.render('index.ejs', {msg: msg});
-		console.log(msg);
+	else if (req.body.login) {
+		login = req.body.login;
+		pwd = md5(req.body.pwd);
+		name = req.body.name;
+		lastname = req.body.lastname;
+		status = req.body.status;
+
+		reqmysql.insertuser(login, pwd, name, lastname, status, function callback (result){
+			console.log(result);
+			res.render('mainPageAdmin.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf});
+		});
 	};
-
 })
-
 
 .use(express.static(__dirname + '/'))
 .listen(8080);

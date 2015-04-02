@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="views/ressources/style.css" type="text/css" media="screen">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Log In</title>
+    </head>
+    <body>
+    	<center>
+	        <h1>Bonjour <%= prenom %> <%= nom %> </h1>
+	        <div id="cadre">
+	        	<form method="post" action="/admin">
+	        		<h1>Ajouter des utilisateurs</h1><br/>
+		        	login : <br/>
+		        	<input type="text" name="login"/>
+		        	<br/><br/>
+		        	password : <br/>
+		        	<input type="password" name="pwd"/>
+		        	<br/><br/>
+		        	Nom : <br/>
+		        	<input type="text" name="name"/>
+		        	<br/><br/>
+		        	Prénom : <br/>
+		        	<input type="text" name="lastname"/>
+		        	<br/><br/>
+		        	Status : <br/>
+		        	<input type="radio" name="status" value="0" checked>Normal
+		        	<input type="radio" name="status" value="1" >Admin
+		        	<br/><br/>
+		        	<input type="submit" value="Save" name="save">
+	        	</form>
+	        </div><br />
+	        <div id="cadre">
+	        	<form method="post" action="/admin">
+	        		<h1>Ajouter des passagers sur des vols</h1><br/>
+		        	id du passager : <br/>
+		        	<input type="text" name="idPassager"/>
+		        	<br/><br/>
+		        	id du vol : <br/>
+		        	<input type="text" name="idVol"/>
+		        	<br/><br/>
+		        	<input type="submit" value="Save" name="save">
+	        	</form>
+	        </div>        
+    	</center>
+    </body> 
+</html>

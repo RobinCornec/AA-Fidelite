@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html>
 	<head>
-            <link rel="stylesheet" href="views/ressources/style.css" type="text/css" media="screen">
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-            <title>Log In</title>
+        <link rel="stylesheet" href="views/ressources/style.css" type="text/css" media="screen">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Log In</title>
 	</head>
 	<body>
-		<div id="employes">
+		<div id="cadre">
             <form method="post" action="/connect">
                 <fieldset>
                     <legend>Connexion</legend>
                     <p>                       
                         Identifiant :<input name="identifiant" type="text" id="identifiant" /><br />
-                        Mot de Passe :<input type="password" name="password" id="password" />                      
+                        Mot de Passe :<input type="password" name="password" id="password" />                
                     </p>
                     <font color="red"> <%= msg %> </font>
                 </fieldset>
@@ -20,8 +20,7 @@
                     <input type="submit" value="connexion" />
                 </p>
             </form>
-		</div>
-		
+		</div>	
 	</body>
 </html>
 
