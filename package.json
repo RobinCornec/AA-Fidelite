@@ -4,12 +4,14 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
+    "MD5": "^1.2.1",
     "body-parser": "^1.12.2",
     "cookie-session": "^1.1.0",
     "ejs": "^2.3.1",
     "ethercalc": "^0.20150217.0",
     "express": "^4.12.3",
     "express-session": "^1.10.4",
+    "md5": "^1.0.0",
     "mysql": "^2.6.1",
     "node-mysql": "^0.4.2"
   },
