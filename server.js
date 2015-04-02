@@ -3,6 +3,7 @@ var express = require('express');
 var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var reqmysql = require("./DAO/connection");
+var md5 = require('MD5');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var app = express();
 var msg = "";
@@ -22,9 +23,8 @@ app.get('/', function(req, res) {
 
 app.get('/connect', function(req, res) { 
 	sess=req.session;
-	pwd = "";
 	if (sess.nom) {
-		reqmysql.selectuser(sess.login, pwd, function callback (result){	
+		reqmysql.selectuser(sess.login, function callback (result){	
 			sess.pf = result.pointFidelite;
 			res.render('mainPage.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf});    		
 		});
@@ -42,12 +42,12 @@ app.post('/connect', function(req, res){
 	if (req.body.identifiant) {
 		sess.login = req.body.identifiant;
 		var pwd = req.body.password;
-		reqmysql.selectuser(sess.login, pwd, function callback (result){	
+		reqmysql.selectuser(sess.login, function callback (result){	
 			try{
 				sess.nom = result.Nom;
 				sess.prenom = result.Prenom;
 				sess.pf = result.pointFidelite;
-				if (sess.login == result.Username && pwd == result.Password) {
+				if (sess.login == result.Username && md5(pwd) == result.Password) {
 			        console.log(result.Prenom + " " + result.Nom + " s'est connecté");
 					res.render('mainPage.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf});
 	    		}
