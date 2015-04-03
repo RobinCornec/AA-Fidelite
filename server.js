@@ -63,7 +63,7 @@ app.post('/connect', function(req, res){
 		    		};       		
 	    		}
 			 	else{
-		    		msg = "Mot de passe incorrect";
+		    		msg = "Username ou Mot de passe incorrect";
 					res.redirect('back');
 		    		console.log(msg);
 	    		};
@@ -130,4 +130,3 @@ app.post('/admin', function(req, res){
 
 .use(express.static(__dirname + '/'))
 .listen(8080);
-
