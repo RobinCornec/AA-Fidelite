@@ -31,7 +31,7 @@ var selectallusers = function (callback){
 var selecttemps = function (idVol, callback){  
 
 	query = connection.query('SELECT TempsMin FROM vols WHERE id = ' + idVol + ';', function res(err, rows, field) {	
-      callback(rows);
+      callback(rows[0]);
   });
 };
 

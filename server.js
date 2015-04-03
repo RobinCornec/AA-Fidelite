@@ -58,7 +58,6 @@ app.post('/connect', function(req, res){
 				sess.admin = result.admin;
 				if (md5(pwd) == result.Password) {
 			        console.log(result.Prenom + " " + result.Nom + " s'est connecté");
-			        console.log(sess.admin);
 			        if (sess.admin == 1) {
 						res.redirect('/admin');
 			        }
@@ -94,7 +93,6 @@ app.get('/mainPage', function(req, res){
 app.get('/admin', function(req, res){
 	sess=req.session;
 	reqmysql.selectallusers(function callback (result){
-			console.log(result);
 			res.render('mainPageAdmin.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf, users: result});  
 		});
 	
@@ -104,33 +102,31 @@ app.get('/admin', function(req, res){
 app.post('/admin', function(req, res){
 	sess=req.session;
 
-	if (req.body.idPassager) {
+	if (req.body.nomPassager) {
 		var date = new Date();
 
 		var nomPassager = req.body.nomPassager;
 		var idVol = req.body.idVol;
 			date = req.body.date + " " + req.body.heure + ":" + req.body.minute + ":00";
 		var pfnew;
-	
+		console.log("id du vol : " + idVol);
 		var expDate = moment(date, "MM/DD/YYYY HH:mm:ss").format('YYYY-MM-DD HH:mm:ss');
 
 		reqmysql.insertvol(nomPassager, idVol, expDate, function callback (result){
 			console.log(result);
 		});
 
-		var re = new RegExp();
-
 		reqmysql.selecttemps(idVol, function callback (result){
 
 			var tempsMin = result.TempsMin;
 
-			reqmysql.selectuserbyid(idPassager, function callback (result){
+			reqmysql.selectuserbyid(nomPassager, function callback (result){
 
 				pfnew = (result.pointFidelite + tempsMin);
 				console.log(result.Prenom + " " + result.Nom + " a maintenant " + pfnew + " points de fidélité");
-				reqmysql.updatetPointF(idPassager, pfnew, function callback (result){
+				reqmysql.updatetPointF(nomPassager, pfnew, function callback (result){
 					console.log(result);
-					res.render('mainPageAdmin.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf});       
+					res.redirect('/admin');       
 				});
 
 			});	
@@ -147,7 +143,7 @@ app.post('/admin', function(req, res){
 
 		reqmysql.insertuser(login, pwd, name, lastname, status, function callback (result){
 			console.log(result);
-			res.render('mainPageAdmin.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf});
+			res.redirect('/admin');
 		});
 	};
 })
