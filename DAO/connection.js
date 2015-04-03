@@ -14,17 +14,30 @@ var selectuser = function (login, callback){
   });  
 };
 
+var selectuserbyid = function (iduser, callback){  
+
+  query = connection.query('SELECT * FROM users WHERE id = "' + iduser + '";', function res(err, rows, field) {  
+    callback(rows[0]);  
+  });  
+};
+
+var selectallusers = function (callback){  
+
+  query = connection.query('SELECT * FROM users;', function res(err, rows, field) {  
+      callback(rows);
+  });
+};
+
 var selecttemps = function (idVol, callback){  
 
 	query = connection.query('SELECT TempsMin FROM vols WHERE id = ' + idVol + ';', function res(err, rows, field) {	
-      callback(rows[0]);
-  	});
-  
+      callback(rows);
+  });
 };
 
-var insertvol = function (iduser, idvol, callback){  
+var insertvol = function (iduser, idvol, date, callback){  
 
-	query = connection.query('INSERT INTO volpassagers (idVol, idUser) VALUES (' + idvol + ', ' + iduser + ');',
+	query = connection.query('INSERT INTO volpassagers (idVol, idUser, dateVol) VALUES (' + idvol + ', ' + iduser + ', "' + date + '");',
 	 function res(err) {	
     	if (!err) {
     		var msg = "insert vol is done !";
@@ -67,6 +80,8 @@ var updatetPointF = function (iduser, pf, callback){
 };
 
 exports.selectuser = selectuser;
+exports.selectuserbyid = selectuserbyid;
+exports.selectallusers = selectallusers;
 exports.selecttemps = selecttemps;
 exports.insertvol = insertvol;
 exports.insertuser = insertuser;

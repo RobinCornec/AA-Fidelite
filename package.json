@@ -12,6 +12,7 @@
     "express": "^4.12.3",
     "express-session": "^1.10.4",
     "md5": "^1.0.0",
+    "moment": "^2.9.0",
     "mysql": "^2.6.1",
     "node-mysql": "^0.4.2"
   },

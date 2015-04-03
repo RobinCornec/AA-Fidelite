@@ -4,10 +4,14 @@ var session = require('cookie-session');
 var bodyParser = require('body-parser');
 var reqmysql = require("./DAO/connection");
 var md5 = require('MD5');
+var moment = require('moment');
+
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var app = express();
 var msg = "";
 var sess;
+
+moment().format();
 
 app.use(session({secret: 'user'}));
 app.use(bodyParser.urlencoded({
@@ -89,7 +93,11 @@ app.get('/mainPage', function(req, res){
 
 app.get('/admin', function(req, res){
 	sess=req.session;
-	res.render('mainPageAdmin.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf});  
+	reqmysql.selectallusers(function callback (result){
+			console.log(result);
+			res.render('mainPageAdmin.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf, users: result});  
+		});
+	
 
 });
 
@@ -97,22 +105,38 @@ app.post('/admin', function(req, res){
 	sess=req.session;
 
 	if (req.body.idPassager) {
-		var idPassager = req.body.idPassager;
+		var date = new Date();
+
+		var nomPassager = req.body.nomPassager;
 		var idVol = req.body.idVol;
-		var date = req.body.date;
+			date = req.body.date + " " + req.body.heure + ":" + req.body.minute + ":00";
 		var pfnew;
-		reqmysql.insertvol(idPassager, idVol, function callback (result){
+	
+		var expDate = moment(date, "MM/DD/YYYY HH:mm:ss").format('YYYY-MM-DD HH:mm:ss');
+
+		reqmysql.insertvol(nomPassager, idVol, expDate, function callback (result){
 			console.log(result);
 		});
+
+		var re = new RegExp();
+
 		reqmysql.selecttemps(idVol, function callback (result){
-			pfnew = (sess.pf + result.TempsMin);
-			sess.pf = pfnew;
-			console.log(sess.prenom + " " + sess.nom + " a maintenant " + sess.pf + " points de fidélité");
-			reqmysql.updatetPointF(idPassager, pfnew, function callback (result){
-				console.log(result);
-				res.render('mainPageAdmin.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf});       
-			});
+
+			var tempsMin = result.TempsMin;
+
+			reqmysql.selectuserbyid(idPassager, function callback (result){
+
+				pfnew = (result.pointFidelite + tempsMin);
+				console.log(result.Prenom + " " + result.Nom + " a maintenant " + pfnew + " points de fidélité");
+				reqmysql.updatetPointF(idPassager, pfnew, function callback (result){
+					console.log(result);
+					res.render('mainPageAdmin.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf});       
+				});
+
+			});	
 		});	
+
+
 	}
 	else if (req.body.login) {
 		login = req.body.login;

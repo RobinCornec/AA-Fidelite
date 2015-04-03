@@ -1,8 +1,18 @@
 <!DOCTYPE html>
 <html>
     <head>
+	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	    <meta http-equiv="Content-Language" content="fr">
+	    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	    <title>SnapBlog</title>
+	    <script>
+	        $(function() {
+	            $("#datepicker").datepicker();
+	        });
+	    </script>
         <link rel="stylesheet" href="views/ressources/style.css" type="text/css" media="screen">
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Log In</title>
     </head>
     <body>
@@ -33,11 +43,24 @@
 	        <div id="cadre">
 	        	<form method="post" action="/admin">
 	        		<h1>Ajouter des passagers sur des vols</h1><br/>
-		        	id du passager : <br/>
-		        	<input type="text" name="idPassager"/>
+		        	Nom du passager : <br/>
+		        	<select name="nomPassager">
+		        		<% users.forEach(function(row){ %>
+                            <option value="<%= row.id %>"><%= row.Username %></option>
+                        <% }) %>
+		        	</select>
 		        	<br/><br/>
 		        	id du vol : <br/>
 		        	<input type="text" name="idVol"/>
+		        	<br/><br/>
+		        	<table align="center">
+		        		<tr><td>date du vol</td><td>Heure</td><td>Min</td></tr>
+		        		<tr>
+		        			<td><input type="text" id="datepicker" name="date"/></td>
+		        			<td><input type="number" name="heure" style="width: 35px"/></td>
+		        			<td><input type="number" name="minute" style="width: 35px"/></td>
+		        		</tr>
+		        	</table>
 		        	<br/><br/>
 		        	<input type="submit" value="Save" name="save">
 	        	</form>
