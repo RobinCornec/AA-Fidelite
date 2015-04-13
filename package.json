@@ -6,7 +6,9 @@
   "dependencies": {
     "MD5": "^1.2.1",
     "body-parser": "^1.12.2",
+    "charenc": "0.0.1",
     "cookie-session": "^1.1.0",
+    "crypt": "0.0.1",
     "ejs": "^2.3.1",
     "ethercalc": "^0.20150217.0",
     "express": "^4.12.3",
