@@ -52,6 +52,7 @@ app.post('/connect', function(req, res){
 		var pwd = req.body.password;
 		reqmysql.selectuser(sess.login, function callback (result){	
 			try{
+				sess.id = result.id;
 				sess.nom = result.Nom;
 				sess.prenom = result.Prenom;
 				sess.pf = result.pointFidelite;
@@ -87,7 +88,19 @@ app.post('/connect', function(req, res){
 });
 app.get('/mainPage', function(req, res){
 	sess=req.session;
-	res.render('mainPage.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf});
+	console.log(sess.id);
+	reqmysql.selectlastvol(sess.id,function callback (result){
+ 		var date =  moment().subtract(30, 'day');
+ 		date =  moment(date, "ddd MMM DD YYYY HH:mm:ss").format("YYYY-MM-DD HH:mm:ss");
+		console.log(result);
+		var lastvol = moment(result.dateVol, "ddd MMM DD YYYY HH:mm:ss").format("DD MMMM YYYY");
+		var trajet = result.Depart + " -> " + result.Destination;
+
+		reqmysql.countvol(sess.id, date, function callback (resultat){
+			var count = resultat.Count;
+			res.render('mainPage.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf, vol: lastvol, trajet: trajet, count: count});
+		})
+	});
 })
 
 app.get('/admin', function(req, res){

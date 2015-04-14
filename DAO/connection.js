@@ -28,9 +28,24 @@ var selectallusers = function (callback){
   });
 };
 
-var selecttemps = function (idVol, callback){  
+var countvol = function (idUser, date, callback){  
+  console.log('DATE+30' + date);
+	query = connection.query('SELECT Count(id) AS Count FROM volpassagers WHERE idUser = ' + idUser + ' AND dateVol >="' + date + '" ;', function res(err, rows, field) {	
+      callback(rows[0]);
+  });
+};
 
-	query = connection.query('SELECT TempsMin FROM vols WHERE id = ' + idVol + ';', function res(err, rows, field) {	
+var selecttemps = function (idVol ,callback){  
+
+  query = connection.query('SELECT TempsMin FROM vols WHERE id = ' + idVol + ';', function res(err, rows, field) {  
+      callback(rows[0]);
+  });
+};
+
+var selectlastvol = function (idUser, callback){  
+
+  query = connection.query('SELECT idUser, dateVol, Depart, Destination, TempsMin FROM volpassagers p JOIN vols v ON p.idVol = v.id WHERE p.id = (SELECT MAX(id) FROM volpassagers WHERE idUser ='+idUser+');', 
+  function res(err, rows, field) {  
       callback(rows[0]);
   });
 };
@@ -86,3 +101,5 @@ exports.selecttemps = selecttemps;
 exports.insertvol = insertvol;
 exports.insertuser = insertuser;
 exports.updatetPointF = updatetPointF;
+exports.selectlastvol = selectlastvol;
+exports.countvol =countvol;

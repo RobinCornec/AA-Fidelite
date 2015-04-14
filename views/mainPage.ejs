@@ -10,5 +10,13 @@
 	        <h1>Bonjour <%= prenom %> <%= nom %> </h1>
 	        <div id="pointVert"><h1> <%= pointFidelite %> </h1></div>
     	</center>
+        <div class='lastvol' style="border: solid 1px black; padding: 10px; width: 300px;">
+            <h4> Votre dernier vol date du <%= vol %> </h4>
+                <b><%= trajet %></b>
+            <h4> </h4>
+        </div>
+        <div class='lastvol' style="border: solid 1px black; padding: 10px; width: 300px; margin-top: 20px;">
+            <b>Vous avez effectué <%= count %> vols ces 30 derniers jours</b>
+        </div>
     </body> 
 </html>
