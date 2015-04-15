@@ -50,6 +50,12 @@ var selectlastvol = function (idUser, callback){
   });
 };
 
+var selectvol = function (callback){  
+  query = connection.query('SELECT id, Depart, Destination FROM vols ORDER BY Depart, Destination;', function res(err, rows, field) {  
+    callback(rows);
+  });
+};
+
 var insertvol = function (iduser, idvol, date, callback){  
 
 	query = connection.query('INSERT INTO volpassagers (idVol, idUser, dateVol) VALUES (' + idvol + ', ' + iduser + ', "' + date + '");',
@@ -95,6 +101,7 @@ var updatetPointF = function (iduser, pf, callback){
 };
 
 exports.selectuser = selectuser;
+exports.selectvol = selectvol;
 exports.selectuserbyid = selectuserbyid;
 exports.selectallusers = selectallusers;
 exports.selecttemps = selecttemps;

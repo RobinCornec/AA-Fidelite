@@ -93,23 +93,30 @@ app.get('/mainPage', function(req, res){
  		var date =  moment().subtract(30, 'day');
  		date =  moment(date, "ddd MMM DD YYYY HH:mm:ss").format("YYYY-MM-DD HH:mm:ss");
 		console.log(result);
-		var lastvol = moment(result.dateVol, "ddd MMM DD YYYY HH:mm:ss").format("DD MMMM YYYY");
-		var trajet = result.Depart + " -> " + result.Destination;
+		if (result != undefined) {
+			var lastvol = "Votre dernier vol date du " + moment(result.dateVol, "ddd MMM DD YYYY HH:mm:ss").format("DD MMMM YYYY");
+			var trajet = result.Depart + " -> " + result.Destination;
+		}
+		else{
+			var lastvol = "";
+			var trajet = "Vous n'avez encore jamais volé avec nous";
+		};
+		
 
 		reqmysql.countvol(sess.id, date, function callback (resultat){
 			var count = resultat.Count;
 			res.render('mainPage.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf, vol: lastvol, trajet: trajet, count: count});
 		})
 	});
-})
+});
 
 app.get('/admin', function(req, res){
 	sess=req.session;
 	reqmysql.selectallusers(function callback (result){
-			res.render('mainPageAdmin.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf, users: result});  
-		});
-	
-
+		reqmysql.selectvol(function callback (row){
+			res.render('mainPageAdmin.ejs', {nom: sess.nom, prenom: sess.prenom, pointFidelite: sess.pf, users: result, vols: row});
+		});			  
+	});	
 });
 
 app.post('/admin', function(req, res){
