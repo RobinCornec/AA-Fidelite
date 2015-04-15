@@ -21,7 +21,13 @@ app.use(bodyParser.json());
 
 app.get('/', function(req, res) { 
 	sess=req.session;
-    res.render('index.ejs', {msg: msg});
+	res.render('index.ejs', {msg: msg});    
+});
+
+app.get('/logout', function(req, res) { 
+	req.session = null;
+	delete req.session;
+    res.redirect('/');
 });
 
 app.get('/connect', function(req, res) { 
@@ -38,7 +44,7 @@ app.get('/connect', function(req, res) {
 		});
 	}
 	else{
-		msg = "Veuillez vous connecter";
+		msg = "Username Incorrect";
 		res.redirect('back');
 		console.log(msg);
 	};

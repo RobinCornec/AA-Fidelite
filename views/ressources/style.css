@@ -37,3 +37,7 @@ header{
     border-radius: 100px;
     line-height: 140px;
 }
+.logout {
+    margin-top: 10px;
+    margin-left: 10px;
+}
